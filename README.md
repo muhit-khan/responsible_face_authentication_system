@@ -181,7 +181,7 @@ result = compare_photos_with_explanations(
 
 ## Contributing
 
-Please read our contribution guidelines and code of ethics before submitting pull requests.
+Please read our [Contribution Guidelines](CONTRIBUTING.md) and code of ethics before submitting pull requests.
 
 ## Developer
 
