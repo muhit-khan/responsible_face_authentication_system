@@ -1,0 +1,9 @@
+deepface
+opencv-python
+numpy
+mediapipe
+cryptography
+PyYAML
+tf-keras
+# tensorflow==2.13.0
+pytest
