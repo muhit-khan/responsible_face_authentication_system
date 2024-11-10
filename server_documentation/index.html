@@ -1,0 +1,222 @@
+<!-- server_documentation/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsible Face Authentication API</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1>Responsible Face Authentication</h1>
+            <ul class="nav-links">
+                <li><a href="#api">API</a></li>
+                <li><a href="#monitoring">Monitoring</a></li>
+                <li><a href="#model">Model</a></li>
+                <li><a href="#consent">Consent</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="api">
+            <h1>Responsible Face Authentication System API</h1>
+
+            <h2>Overview</h2>
+            <p>A privacy-focused facial authentication system implementing responsible AI principles for secure and
+                ethical
+                biometric verification.</p>
+
+            <h2>Key Features</h2>
+            <ul>
+                <li>Privacy-first approach with data encryption</li>
+                <li>Explicit consent management</li>
+                <li>Detailed verification explanations</li>
+                <li>Performance monitoring</li>
+                <li>Quality checks for facial images</li>
+            </ul>
+
+            <h2>API Endpoints</h2>
+
+            <div class="endpoint">
+                <h3>POST /compare</h3>
+                <p>Compare two facial images for authentication with detailed explanations.</p>
+
+                <h4>Request Format (multipart/form-data)</h4>
+                <table>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>reference_image</td>
+                        <td>File</td>
+                        <td><span class="required">Required</span></td>
+                        <td>Reference face image (jpg, png)</td>
+                    </tr>
+                    <tr>
+                        <td>live_image</td>
+                        <td>File</td>
+                        <td><span class="required">Required</span></td>
+                        <td>Live face image to compare (jpg, png)</td>
+                    </tr>
+                    <tr>
+                        <td>user_id</td>
+                        <td>String</td>
+                        <td><span class="required">Required</span></td>
+                        <td>Unique identifier for the user</td>
+                    </tr>
+                    <tr>
+                        <td>retention_period</td>
+                        <td>Integer</td>
+                        <td><span class="required">Required</span></td>
+                        <td>Days to retain data (e.g., 30)</td>
+                    </tr>
+                    <tr>
+                        <td>purpose</td>
+                        <td>String</td>
+                        <td><span class="optional">Optional</span></td>
+                        <td>Default: "identity_verification"</td>
+                    </tr>
+                    <tr>
+                        <td>data_types</td>
+                        <td>String</td>
+                        <td><span class="optional">Optional</span></td>
+                        <td>Comma-separated list. Default: "facial_images,facial_features"</td>
+                    </tr>
+                </table>
+
+                <h4>Example Request using cURL</h4>
+                <div class="code">
+                    <pre>
+curl -X POST http://localhost:5000/compare \
+  -F "reference_image=@/path/to/reference.jpg" \
+  -F "live_image=@/path/to/live.jpg" \
+  -F "user_id=user123" \
+  -F "retention_period=30" \
+  -F "purpose=identity_verification" \
+  -F "data_types=facial_images,facial_features"
+                </pre>
+                </div>
+
+                <h4>Example Response</h4>
+                <div class="code">
+                    <pre>
+{
+    "analysis": {
+        "live_image": {
+            "age": 26,
+            "emotion": "neutral",
+            "gender": "Man",
+            "quality": {
+                "brightness": 171.90350788037915,
+                "contrast": 64.50245847849634,
+                "has_face": true,
+                "resolution": 569
+            }
+        },
+        "reference_image": {
+            "age": 26,
+            "emotion": "neutral",
+            "gender": "Man",
+            "quality": {
+                "brightness": 171.90350788037915,
+                "contrast": 64.50245847849634,
+                "has_face": true,
+                "resolution": 569
+            }
+        }
+    },
+    "technical_details": {
+        "detector": "opencv",
+        "distance_metric": "cosine",
+        "model": "Facenet512",
+        "raw_distance": 0.0
+    },
+    "verification_result": {
+        "confidence": 100.0,
+        "detailed_explanation": "The images are matching because the facial features show strong similarity with a confidence score of 100.0%. This is evidenced by: the estimated ages are very close (difference of 0 years). The similarity score (100.0%) significantly exceeds the required threshold of 70.0%.",
+        "match": true,
+        "processing_time": 3.011749744415283,
+        "threshold": 70.0
+    }
+}
+                </pre>
+                </div>
+            </div>
+
+            <h2>Error Handling</h2>
+            <table>
+                <tr>
+                    <th>Error Code</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>400</td>
+                    <td>Missing or invalid input parameters</td>
+                </tr>
+                <tr>
+                    <td>415</td>
+                    <td>Unsupported file type</td>
+                </tr>
+                <tr>
+                    <td>500</td>
+                    <td>Server error during processing</td>
+                </tr>
+            </table>
+
+            <h2>Contact</h2>
+            <p>For questions or support:</p>
+            <ul>
+                <li>Developer: Muhit Khan</li>
+                <li>Email: muhit.dev@gmail.com</li>
+                <li>LinkedIn: <a href="https://linkedin.com/in/muhit-khan">linkedin.com/in/muhit-khan</a></li>
+            </ul>
+        </section>
+
+        <section id="monitoring" class="dashboard">
+            <h2>System Monitoring</h2>
+            <div class="monitoring-container">
+                <div class="metric-card" id="performanceMetrics">
+                    <!-- Charts will be rendered here -->
+                </div>
+                <div class="metric-card" id="driftStatus">
+                    <h3>System Status</h3>
+                    <!-- Drift status will be displayed here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="model">
+            <h2>Model Information</h2>
+            <div id="modelCard">
+                <!-- Model card will be displayed here -->
+            </div>
+        </section>
+
+        <section id="consent">
+            <h2>Consent Management</h2>
+            <div id="consentLogs">
+                <!-- Consent logs will be displayed here -->
+            </div>
+        </section>
+
+        <section id="settings">
+            <h2>System Configuration</h2>
+            <div id="systemSettings">
+                <!-- Settings will be displayed here -->
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

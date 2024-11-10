@@ -21,7 +21,7 @@ class ModelMonitor:
         metrics = {
             "timestamp": datetime.datetime.now().isoformat(),
             "confidence": prediction.get("verification_result", {}).get("confidence", 0),
-            "processing_time": prediction.get("processing_time", 0)
+            "processing_time": prediction.get("verification_result", {}).get("processing_time", 0)  # Fixed to get actual processing time
         }
         
         file_path = f"monitoring/{self.model_name}_performance.jsonl"

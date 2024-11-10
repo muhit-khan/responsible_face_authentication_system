@@ -8,6 +8,15 @@ def load_config(config_path: str) -> Dict[str, Any]:
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Config file not found: {config_path}")
         
+    # Handle .py files by importing as module
+    if config_path.endswith('.py'):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("config", config_path)
+        config = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(config)
+        return config.SETTINGS
+    
+    # Handle other formats
     ext = os.path.splitext(config_path)[1].lower()
     with open(config_path, 'r') as f:
         if ext == '.json':

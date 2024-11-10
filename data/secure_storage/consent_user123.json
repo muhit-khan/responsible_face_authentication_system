@@ -1,1 +1,1 @@
-{"user_id": "user123", "consent_date": "2024-11-10T12:17:56.831960", "purpose": "identity_verification", "retention_period": 30, "data_types": ["facial_images", "facial_features"], "revoked": false}
+{"user_id": "user123", "consent_date": "2024-11-10T12:26:16.460281", "purpose": "identity_verification", "retention_period": 30, "data_types": ["facial_images", "facial_features"], "revoked": false}
