@@ -15,7 +15,7 @@ This system provides face-based authentication while prioritizing:
 ## Project Structure
 
 ```
-responsible_face_auth/
+responsible_face_authentication/
 │
 ├── src/
 │   ├── __init__.py
