@@ -1,0 +1,13 @@
+{
+    "client1": {
+        "hashed_password": "$2b$12$h3Xql01DCpMzKMYgqWI8X.fyarGBfYgCmqo7szDQIwl3ZOAohcUoi",
+        "email": "client1@gmail.com",
+        "phone": "1234567",
+        "purpose": "sdfghjk",
+        "token": "ndDllmdgcUJTp33D9RnLWY2pl1eWcw4r8Q-LK4MjfzI",
+        "registered_on": "2024-11-10T19:32:53.711229",
+        "registered_from_ip": "127.0.0.1",
+        "last_login": "2024-11-10T19:34:27.872839",
+        "last_login_ip": "127.0.0.1"
+    }
+}

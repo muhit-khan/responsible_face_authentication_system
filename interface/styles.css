@@ -168,3 +168,31 @@ th {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+.consent-table-container {
+    max-height: 200px;
+    /* Height for 6 rows including header */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.consent-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.consent-table th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.consent-table th,
+.consent-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}

@@ -245,47 +245,56 @@ function updateModelCardDisplay(data) {
 }
 
 function updateConsentLogsDisplay(data) {
-    const consentDiv = document.getElementById('consentLogs');
-    // Sort records by date (most recent first)
-    const sortedRecords = [...data.records].sort((a, b) =>
-        new Date(b.consent_date) - new Date(a.consent_date)
-    );
+    const container = document.getElementById('consentLogs');
 
-    consentDiv.innerHTML = `
-        <div class="consent-summary">
-            <p>Total Records: ${data.records.length}</p>
-            <p>Active Consents: ${data.records.filter(r => !r.revoked).length}</p>
-        </div>
-        <table class="consent-table">
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Date</th>
-                    <th>Purpose</th>
-                    <th>Retention (days)</th>
-                    <th>Status</th>
-                    <th>Expiry Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${sortedRecords.map(record => {
-        const consentDate = new Date(record.consent_date);
-        const expiryDate = new Date(consentDate.getTime() + record.retention_period * 24 * 60 * 60 * 1000);
-        const isExpired = expiryDate < new Date();
+    // Create scrollable container
+    const tableContainer = document.createElement('div');
+    tableContainer.className = 'consent-table-container';
 
-        return `
-                    <tr class="${record.revoked ? 'revoked' : ''} ${isExpired ? 'expired' : ''}">
-                        <td>${record.user_id}</td>
-                        <td>${consentDate.toLocaleDateString()}</td>
-                        <td>${record.purpose}</td>
-                        <td>${record.retention_period}</td>
-                        <td>${record.revoked ? 'Revoked' : (isExpired ? 'Expired' : 'Active')}</td>
-                        <td>${expiryDate.toLocaleDateString()}</td>
-                    </tr>
-                `}).join('')}
-            </tbody>
-        </table>
+    // Create table
+    const table = document.createElement('table');
+    table.className = 'consent-table';
+
+    // Add header
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Date</th>
+                <th>Purpose</th>
+                <th>Retention (days)</th>
+                <th>Status</th>
+                <th>Expiry Date</th>
+            </tr>
+        </thead>
     `;
+
+    // Create tbody
+    const tbody = document.createElement('tbody');
+
+    // Add rows
+    data.records.forEach(record => {
+        const consentDate = new Date(record.consent_date);
+        const expiryDate = new Date(consentDate);
+        expiryDate.setDate(expiryDate.getDate() + record.retention_period);
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${record.user_id}</td>
+            <td>${consentDate.toLocaleDateString()}</td>
+            <td>${record.purpose}</td>
+            <td>${record.retention_period}</td>
+            <td>Active</td>
+            <td>${expiryDate.toLocaleDateString()}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    tableContainer.appendChild(table);
+
+    container.innerHTML = '';
+    container.appendChild(tableContainer);
 }
 
 function updateSettingsDisplay(data) {

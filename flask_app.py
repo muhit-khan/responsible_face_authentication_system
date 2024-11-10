@@ -10,16 +10,19 @@ from src.monitoring.model_monitor import ModelMonitor
 from src.security.consent_manager import ConsentRecord
 from src.core.face_comparator import compare_photos_with_explanations
 from src.utils.helpers import load_config, export_model_card
+from src.security.auth_manager import AuthManager
+import functools
 
 app = Flask(__name__, 
     static_url_path='', 
-    static_folder='server_documentation')
+    static_folder='interface')
 CORS(app)
 
 # Initialize components
 privacy_manager = PrivacyManager('./data/secure_storage')
 model_monitor = ModelMonitor('facial_comparison_v1')
 settings = load_config('./config/settings.py')
+auth_manager = AuthManager('./data/secure_storage')
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -27,7 +30,63 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def require_token(f):
+    @functools.wraps(f)
+    def decorated_function(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token or not auth_manager.verify_token(token):
+            return jsonify({"error": "Invalid or missing token"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/auth/register', methods=['POST'])
+def register():
+    try:
+        required = ['username', 'password', 'email', 'phone', 'purpose']
+        data = request.get_json()
+        
+        if not all(field in data for field in required):
+            return jsonify({"error": "Missing required fields"}), 400
+            
+        result = auth_manager.register_client(
+            username=data['username'],
+            password=data['password'],
+            email=data['email'],
+            phone=data['phone'],
+            purpose=data['purpose'],
+            ip=request.remote_addr
+        )
+        
+        return jsonify(result), 201
+        
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "Registration failed"}), 500
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        
+        if not data or 'username' not in data or 'password' not in data:
+            return jsonify({"error": "Missing credentials"}), 400
+            
+        result = auth_manager.verify_client(
+            username=data['username'],
+            password=data['password'],
+            ip=request.remote_addr
+        )
+        
+        if result:
+            return jsonify(result)
+        return jsonify({"error": "Invalid credentials"}), 401
+        
+    except Exception as e:
+        return jsonify({"error": "Login failed"}), 500
+
 @app.route('/compare', methods=['POST'])
+@require_token
 def compare_faces():
     try:
         # Validate files
@@ -106,7 +165,7 @@ def compare_faces():
 
 @app.route('/')
 def documentation():
-    return send_from_directory('server_documentation', 'index.html')
+    return send_from_directory('interface', 'index.html')
 
 @app.route('/monitoring/performance')
 def performance_logs():
@@ -131,18 +190,8 @@ def model_card():
 
 @app.route('/consent/logs')
 def consent_logs():
-    """Display consent records (with PII removed)."""
-    consent_files = os.listdir('./data/secure_storage')
-    consent_records = []
-    for file in consent_files:
-        if file.startswith('consent_'):
-            with open(os.path.join('./data/secure_storage', file), 'r') as f:
-                record = json.load(f)
-                # Format user_id correctly
-                original_id = record['user_id']
-                record['user_id'] = f"user_{original_id}"  # Add user_ prefix without truncating
-                consent_records.append(record)
-    return jsonify({"records": consent_records})
+    """Display consent records."""
+    return jsonify({"records": privacy_manager.get_all_consents()})
 
 @app.route('/system/settings')
 def system_settings():
