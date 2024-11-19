@@ -1,3 +1,8 @@
+#Sensitive data
+data/secure_storage/
+monitoring/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

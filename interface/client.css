@@ -1,6 +1,10 @@
 .auth-container {
-    max-width: 400px;
-    margin: 2rem auto;
+    flex: 0 0 400px;
+    /* Fixed width */
+    margin: 0;
+    /* Remove previous margin */
+    height: fit-content;
+    /* Prevent stretching */
     padding: 2rem;
     background: #fff;
     border-radius: 8px;
@@ -79,4 +83,176 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.stats-container {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.stat-card {
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.stat-card.success {
+    border-left: 4px solid #28a745;
+}
+
+.stat-card.error {
+    border-left: 4px solid #dc3545;
+}
+
+.stat-card h4 {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.stat-card p {
+    margin: 0.5rem 0 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.recent-activity {
+    margin-top: 2rem;
+}
+
+.activity-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-item .result {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.activity-item .success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.activity-item .failure {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.documentation-container {
+    flex: 1;
+    /* Take remaining space */
+    margin: 0;
+    /* Remove previous margin */
+    max-width: 800px;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.doc-section {
+    margin-bottom: 2rem;
+}
+
+.endpoint {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.method {
+    background: #28a745;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.url {
+    font-family: monospace;
+    color: #666;
+}
+
+.param-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.param-table th,
+.param-table td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.param-table th {
+    background: #f8f9fa;
+}
+
+.code-block {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: monospace;
+    margin: 1rem 0;
+}
+
+.code-examples {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.code-tab h5 {
+    margin: 0 0 0.5rem 0;
+    color: #666;
+}
+
+/* Update main container layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Create flex layout for side-by-side containers */
+.main-content {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem auto;
+}
+
+/* Add responsive design */
+@media (max-width: 1024px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .auth-container,
+    .documentation-container {
+        max-width: 100%;
+    }
 }

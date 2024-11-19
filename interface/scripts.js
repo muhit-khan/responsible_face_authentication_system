@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         fetchMonitoringData();
         checkSystemHealth();
-    }, 1000); // Every 1 second
+    }, 30000); // Every 30 second
 });
 
 async function fetchMonitoringData() {

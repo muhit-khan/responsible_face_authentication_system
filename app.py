@@ -34,8 +34,14 @@ def require_token(f):
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         token = request.headers.get('Authorization')
-        if not token or not auth_manager.verify_token(token):
-            return jsonify({"error": "Invalid or missing token"}), 401
+        if not token:
+            return jsonify({"error": "Missing token"}), 401
+        
+        # Verify token is valid
+        user = auth_manager.get_user_by_token(token)
+        if not user:
+            return jsonify({"error": "Invalid token"}), 401
+            
         return f(*args, **kwargs)
     return decorated_function
 
@@ -218,5 +224,48 @@ def system_health():
         }
     })
 
+@app.route('/user/stats')
+@require_token
+def user_stats():
+    """Get comparison statistics for authenticated user."""
+    try:
+        token = request.headers.get('Authorization')
+        user = auth_manager.get_user_by_token(token)
+        
+        if not user:
+            return jsonify({"error": "User not found"}), 401
+            
+        log_path = f"monitoring/{model_monitor.model_name}_performance.jsonl"
+        stats = {
+            "total_comparisons": 0,
+            "successful": 0,
+            "unsuccessful": 0,
+            "recent_activity": [],
+            "average_confidence": 0
+        }
+        
+        if os.path.exists(log_path):
+            with open(log_path, 'r') as f:
+                logs = [json.loads(line) for line in f]
+                # Filter logs for current user
+                user_logs = [log for log in logs if log.get('user_id') == user['username']]
+                
+                if user_logs:
+                    successful_logs = [log for log in user_logs if log.get('match_result', False)]
+                    stats.update({
+                        "total_comparisons": len(user_logs),
+                        "successful": len(successful_logs),
+                        "unsuccessful": len(user_logs) - len(successful_logs),
+                        "recent_activity": sorted(user_logs, key=lambda x: x['timestamp'], reverse=True)[:5],
+                        "average_confidence": sum(log.get('confidence', 0) for log in user_logs) / len(user_logs)
+                    })
+        
+        return jsonify(stats)
+        
+    except Exception as e:
+        print(f"Error in user_stats: {str(e)}")  # Debug log
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)

@@ -67,3 +67,22 @@ class AuthManager:
     def verify_token(self, token: str) -> bool:
         clients = self._load_clients()
         return any(client["token"] == token for client in clients.values())
+
+    def get_user_by_token(self, token: str) -> Optional[Dict]:
+        """Get user information by token."""
+        try:
+            clients = self._load_clients()
+            
+            # Find user with matching token
+            for username, user_data in clients.items():
+                if user_data.get('token') == token:
+                    return {
+                        'username': username,
+                        **{k: v for k, v in user_data.items() 
+                           if k not in ['hashed_password']}  # Exclude sensitive data
+                    }
+            return None
+            
+        except Exception as e:
+            print(f"Error getting user by token: {str(e)}")
+            return None
