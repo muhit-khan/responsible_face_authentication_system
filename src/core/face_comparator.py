@@ -18,8 +18,9 @@ def compare_photos_with_explanations(
     try:
         start_time = time.time()
         preprocessor = ImagePreprocessor()
-        modelName=FACE_MODELS[2]
-        detectorBackend=DETECTION_BACKENDS[0]
+        modelName=FACE_MODELS[1]
+        detectorBackend=DETECTION_BACKENDS[5]
+        thresholdValue=0.6
         
         # Preprocess images
         ref_image, ref_quality, ref_metrics = preprocessor.preprocess_image(reference_image_path)
@@ -47,6 +48,8 @@ def compare_photos_with_explanations(
             img2_path=live_image_path,
             model_name=modelName,
             detector_backend=detectorBackend,
+            # threshold = thresholdValue,
+            # anti_spoofing = False
         )
 
         # Calculate metrics

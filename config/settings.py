@@ -3,7 +3,7 @@ SETTINGS = {
     "face_detection": {
         "model": "Facenet512",
         "detector": "OpenCV",
-        "min_confidence": 0.7
+        "min_confidence": 0.6
     },
     "privacy": {
         "retention_days": 30,
