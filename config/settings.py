@@ -1,9 +1,9 @@
 # Face authentication system configuration
 SETTINGS = {
     "face_detection": {
-        "model": "Facenet512",
-        "detector": "OpenCV",
-        "min_confidence": 0.6
+        "model": "Facenet",
+        "detector": "RetinaFace",
+        "min_confidence": "[default]"
     },
     "privacy": {
         "retention_days": 30,

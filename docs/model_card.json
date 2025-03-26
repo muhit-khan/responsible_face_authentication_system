@@ -3,8 +3,8 @@
         "name": "Responsible Face Authentication System",
         "version": "1.0.0",
         "description": "Face verification system with privacy controls",
-        "model_architecture": "Facenet512",
-        "backend": "OpenCV"
+        "model_architecture": "Facenet",
+        "backend": "RetinaFace"
     },
     "intended_use": {
         "primary_uses": [

@@ -179,6 +179,29 @@ result = compare_photos_with_explanations(
 )
 ```
 
+## Docker Deployment
+
+You can easily deploy this application using Docker:
+
+### Building the Docker Image
+
+```bash
+# Build the Docker image
+docker build -t responsible-face-auth-system .
+```
+
+### Running the Container
+
+```bash
+# Run the container
+docker run -p 5000:5000 responsible-face-auth-system
+
+# To persist data across restarts, use volumes:
+docker run -p 5000:5000 -v $(pwd)/data:/app/data responsible-face-auth-system
+```
+
+The application will be accessible at http://localhost:5000
+
 ## Contributing
 
 Please read our [Contribution Guidelines](CONTRIBUTING.md) and code of ethics before submitting pull requests.
